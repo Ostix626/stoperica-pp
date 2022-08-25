@@ -4,6 +4,9 @@ import QtQuick.Controls 2.5
 import QtQuick.Window 2.3
 import QtQuick.Layouts 1.3
 
+
+
+
 Window {
     id: window
     width: 700
@@ -37,7 +40,6 @@ Window {
 //                x: 0
 //                y: 0
                 text: "Satnica (EUR): "
-                focus: true
                 font.styleName: "Bold"
                 font.pointSize: 16
                 anchors.top: rectangle_satnica.top
@@ -79,7 +81,6 @@ Window {
             Label{
                 id: label_vrijeme_mirovanja
                 text: "Vrijeme mirovanja (min): "
-                focus: true
                 font.styleName: "Bold"
                 font.pointSize: 16
                 anchors.top: textField_satnica.bottom
@@ -114,6 +115,12 @@ Window {
                 anchors.leftMargin: 5
                 onClicked: {
                     label_vrijeme_mirovanja.text = "Vrijeme mirovanja (min): " + textField_vrijeme_mirovanja.text
+                    if (textField_vrijeme_mirovanja.text !== "" ) {
+                        label_broj_preostalog_vremena_mirovanja.preostalo_vrijeme_mirovanja = textField_vrijeme_mirovanja.text * 60
+                    }
+                    else {
+                        label_broj_preostalog_vremena_mirovanja.preostalo_vrijeme_mirovanja = 66
+                    }
                 }
             }
 
@@ -134,7 +141,7 @@ Window {
         Label{
             id: label_proteklo_vrijeme_mirovanja
             text: "Proteklo vrijeme mirovanja: "
-            focus: true
+
             font.styleName: "Bold"
             font.pointSize: 16
             anchors.top: rectangle_postavke.top
@@ -147,8 +154,9 @@ Window {
         }
         Label{
             id: label_broj_preostalog_vremena_mirovanja
-            text: "14:22 min"
-            focus: true
+            property int preostalo_vrijeme_mirovanja: 900
+            text: parseInt(preostalo_vrijeme_mirovanja / 60) + ":" + preostalo_vrijeme_mirovanja % 60 + " min"
+//            text: "14:22"
             font.styleName: "Bold"
             font.pointSize: 20
             anchors.top: label_proteklo_vrijeme_mirovanja.bottom
@@ -166,21 +174,64 @@ Window {
             anchors.left: rectangle_vrijeme.left
             anchors.right: rectangle_vrijeme.right
             anchors.bottom: rectangle_vrijeme.bottom
-            leftPadding: 4
-            text: qsTr("START/STOP")
-            font.pointSize: 20
             anchors.leftMargin: 30
             anchors.rightMargin: 30
             anchors.bottomMargin: 20
+            leftPadding: 4
+            text: qsTr("START/STOP")
+            font.pointSize: 20
             onClicked: {
-                //TODO: funkcija koja ce priomijenit start i stop tekst i upravaljt vremenom
+                if (timer_odbrojaavnje.running === true)
+                {
+                    timer_odbrojaavnje.running = false
+                    button_start_stop.text = qsTr("START")
+                }
+                else if (timer_odbrojaavnje.running === false)
+                {
+                    timer_odbrojaavnje.running = true
+                    button_start_stop.text = qsTr("STOP")
+
+                }
             }
         }
+    }
+
+    Rectangle {
+        id: rectangle_stranke
+        color: "#eff3ff"
+        anchors {
+            fill: parent
+            topMargin: rectangle_postavke.height + 20
+            margins: 10
+        }
+        Keys.onPressed: (event)=> { if (event.key == Qt.Key_Enter) console.log("event.8key"); }
 
 
+//        Keys.onPressed: {
+//            console.log(".key")
+//            if (event.key === Qt.Key_Left){
+
+//                console.log("event.key");
+//            }
+//        }
     }
 
 
+    Timer {
+        id: timer_odbrojaavnje
+        interval: 1000
+        repeat: true
+        running: true
+        onTriggered: {
+            console.log(label_broj_preostalog_vremena_mirovanja.preostalo_vrijeme_mirovanja)
+            if (label_broj_preostalog_vremena_mirovanja.preostalo_vrijeme_mirovanja > 0) {
+                label_broj_preostalog_vremena_mirovanja.preostalo_vrijeme_mirovanja -= 1
+            }
+            else {
+                //TODO: funkcija oduzet vrijeme na aktivnoj stranci
+            }
+        }
+    }
 
 
 }
