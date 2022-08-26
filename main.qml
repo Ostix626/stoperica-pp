@@ -204,7 +204,40 @@ Window {
             topMargin: rectangle_postavke.height + 20
             margins: 10
         }
-        Keys.onPressed: (event)=> { if (event.key == Qt.Key_Enter) console.log("event.8key"); }
+
+        ListModel {
+            id: model_stranke
+            ListElement { ime: "goldfren" ; vrijeme: "4:34:33" }
+            ListElement { ime: "goldfren" ; vrijeme: "4:34:33" }
+            ListElement { ime: "goldfren" ; vrijeme: "4:34:33" }
+            ListElement { ime: "goldfren" ; vrijeme: "4:34:33" }
+            ListElement { ime: "goldfren" ; vrijeme: "4:34:33" }
+            ListElement { ime: "goldfren" ; vrijeme: "4:34:33" }
+            ListElement { ime: "goldfren" ; vrijeme: "4:34:33" }
+            ListElement { ime: "goldfren" ; vrijeme: "4:34:33" }
+        }
+
+        Component {
+            id: component_stranke_delegate
+            Row {
+                Text {
+                    text: model.ime
+                }
+                Text {
+                    text: model.vrijeme
+                }
+            }
+        }
+
+        Column {
+            anchors.fill: parent
+            Repeater {
+                model: model_stranke
+                delegate: component_stranke_delegate
+            }
+        }
+
+//        Keys.onPressed: (event)=> { if (event.key == Qt.Key_Enter) console.log("event.8key"); }
 
 
 //        Keys.onPressed: {

