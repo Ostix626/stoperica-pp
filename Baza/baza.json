@@ -1,0 +1,21 @@
+{
+    "vrijemeNeaktivnosti": 5,
+    "cijenaSata" : 5,
+    "stranke" : [
+        {
+            "id": 1,
+            "ime" : "goldfren",
+            "vrijeme" : "4:45:34"
+        },
+        {
+            "id": 2,
+            "ime" : "Montraker d.o.o.",
+            "vrijeme" : "3:23:15"
+        },
+	{
+            "id": 3,
+            "ime" : "Bepi the barber",
+            "vrijeme" : "2:16:48"
+        }
+    ]
+}
