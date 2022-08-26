@@ -12,16 +12,68 @@
 #include <windows.h>
 //keylogger
 
+#include <QFile>
+#include <QJsonObject>
+#include <QJsonDocument>
+#include <QJsonArray>
+
 #include <iostream>
 using namespace std;
 
+QJsonObject createDbContext() {
+    QFile file;
+    file.setFileName("C:\\Users\\Dominik\\Desktop\\baza.json");
+    file.open(QIODevice::ReadOnly | QIODevice::Text);
+    const QByteArray val = file.readAll();
+    file.close();
+    QJsonParseError jsonError;
+    QJsonDocument doc = QJsonDocument::fromJson(val, &jsonError);
+    if( jsonError.error != QJsonParseError::NoError ) {
+        std::cout << "fromJson failed: " << jsonError.errorString().toStdString() << std::endl;
+        return QJsonObject();
+    }else {
+        QJsonObject dbContext = doc.object();
+        return dbContext;
+    }
+}
 
+QJsonArray getStrankeArray(QJsonObject dbContext) {
+    QJsonValue strankeJson = dbContext.value(QString("stranke"));
+    QJsonArray stranke = strankeJson.toArray();
+    return stranke;
+}
+
+QStringList getStrankeNames(QJsonArray stranke) {
+    QStringList strankeNames;
+    for(int i = 0; i < stranke.size(); ++i) {
+        QJsonObject name = stranke[i].toObject();
+        strankeNames<<name.value(QString("ime")).toString();
+    }
+
+    return strankeNames;
+}
 
 int main(int argc, char *argv[])
 {
+    //baza
+    QJsonObject dbContext = createDbContext();
+    double satnica = dbContext.value(QString("cijenaSata")).toDouble();
+    qWarning() << satnica;
+    double vrijemeMirovanja = dbContext.value(QString("vrijemeNeaktivnosti")).toDouble();
+    qWarning() << vrijemeMirovanja;
+    QJsonArray stranke = getStrankeArray(dbContext);
+    QStringList strankeNames = getStrankeNames(stranke);
+    QJsonObject vrijeme = stranke[0].toObject();
+    qWarning() << vrijeme.value(QString("vrijeme")).toString();
+    qWarning() << strankeNames[0];
+    qWarning() << strankeNames[1];
+    qWarning() << strankeNames[2];
+    //baza
+
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
+
     QGuiApplication app(argc, argv);
 
     QQmlApplicationEngine engine;
