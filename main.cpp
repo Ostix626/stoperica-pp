@@ -16,24 +16,65 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QJsonArray>
+#include <filesystem>
+#include <unistd.h>
+#include <QDir>
+#include <QTextStream>
 
 #include <iostream>
 using namespace std;
+using std::filesystem::current_path;
 
 QJsonObject createDbContext() {
-    QFile file;
-    file.setFileName("C:\\Users\\Dominik\\Desktop\\baza.json");
-    file.open(QIODevice::ReadOnly | QIODevice::Text);
-    const QByteArray val = file.readAll();
-    file.close();
-    QJsonParseError jsonError;
-    QJsonDocument doc = QJsonDocument::fromJson(val, &jsonError);
-    if( jsonError.error != QJsonParseError::NoError ) {
-        std::cout << "fromJson failed: " << jsonError.errorString().toStdString() << std::endl;
-        return QJsonObject();
+    QString dbContent = R"({
+        "vrijemeNeaktivnosti": 5,
+        "cijenaSata" : 5,
+        "stranke" : [
+            {
+                "id": 1,
+                "ime" : "goldfren",
+                "vrijeme" : "4:45:34"
+            },
+            {
+                "id": 2,
+                "ime" : "Montraker d.o.o.",
+                "vrijeme" : "3:23:15"
+            },
+        {
+                "id": 3,
+                "ime" : "Bepi the barber",
+                "vrijeme" : "2:16:48"
+            }
+        ]
+    })";
+    QString dbPath = QDir::currentPath() + "/Baza";
+    QDir dbDir = QDir();
+    dbDir.mkpath(dbPath);
+    dbPath += "/baza.json";
+    QFile file(dbPath);
+
+    if(!file.exists()) {
+        if(file.open(QIODevice::ReadWrite | QIODevice::Text)) {
+            bool flag = true;
+            qWarning() << flag;
+            QTextStream stream(&file);
+            stream << dbContent;
+            file.close();
+        }
     }else {
-        QJsonObject dbContext = doc.object();
-        return dbContext;
+        file.open(QIODevice::ReadOnly | QIODevice::Text);
+        const QByteArray val = file.readAll();
+        file.close();
+        QJsonParseError jsonError;
+        QJsonDocument doc = QJsonDocument::fromJson(val, &jsonError);
+
+        if( jsonError.error != QJsonParseError::NoError ) {
+            std::cout << "fromJson failed: " << jsonError.errorString().toStdString() << std::endl;
+            return QJsonObject();
+        }else {
+            QJsonObject dbContext = doc.object();
+            return dbContext;
+        }
     }
 }
 
@@ -55,6 +96,7 @@ QStringList getStrankeNames(QJsonArray stranke) {
 
 int main(int argc, char *argv[])
 {
+
     //baza
     QJsonObject dbContext = createDbContext();
     double satnica = dbContext.value(QString("cijenaSata")).toDouble();
