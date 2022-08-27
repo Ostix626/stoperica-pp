@@ -13,6 +13,7 @@
 //keylogger
 
 #include <QFile>
+#include <QDir>
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QJsonArray>
@@ -22,7 +23,9 @@ using namespace std;
 
 QJsonObject createDbContext() {
     QFile file;
-    file.setFileName("C:\\Users\\Dominik\\Desktop\\baza.json");
+    file.setFileName("./Baza/baza.json"); //TODO: try, ako ne usprije -> napravit mapu Baza i datoteu baza.json na mjestu  QDir::currentPath() + "/Baza/baza.json i u baza.json hitit hardkodiranu praznu bazu
+//    file.setFileName( QDir::currentPath() + "/Baza/baza.json");
+//    file.setFileName("D:\\Projekti\\QT\\Projekt\\timer\\Baza\\baza.json");
     file.open(QIODevice::ReadOnly | QIODevice::Text);
     const QByteArray val = file.readAll();
     file.close();
@@ -55,6 +58,8 @@ QStringList getStrankeNames(QJsonArray stranke) {
 
 int main(int argc, char *argv[])
 {
+    qWarning() << QDir::currentPath();
+
     //baza
     QJsonObject dbContext = createDbContext();
     double satnica = dbContext.value(QString("cijenaSata")).toDouble();
