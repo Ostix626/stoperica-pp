@@ -53,26 +53,24 @@ QJsonObject createDbContext() {
 
     if(!file.exists()) {
         if(file.open(QIODevice::ReadWrite | QIODevice::Text)) {
-            bool flag = true;
-            qWarning() << flag;
             QTextStream stream(&file);
             stream << dbContent;
             file.close();
         }
-    }else {
-        file.open(QIODevice::ReadOnly | QIODevice::Text);
-        const QByteArray val = file.readAll();
-        file.close();
-        QJsonParseError jsonError;
-        QJsonDocument doc = QJsonDocument::fromJson(val, &jsonError);
+    }
 
-        if( jsonError.error != QJsonParseError::NoError ) {
-            std::cout << "fromJson failed: " << jsonError.errorString().toStdString() << std::endl;
-            return QJsonObject();
-        }else {
-            QJsonObject dbContext = doc.object();
-            return dbContext;
-        }
+    file.open(QIODevice::ReadOnly | QIODevice::Text);
+    const QByteArray val = file.readAll();
+    file.close();
+    QJsonParseError jsonError;
+    QJsonDocument doc = QJsonDocument::fromJson(val, &jsonError);
+
+    if( jsonError.error != QJsonParseError::NoError ) {
+        std::cout << "fromJson failed: " << jsonError.errorString().toStdString() << std::endl;
+        return QJsonObject();
+    }else {
+        QJsonObject dbContext = doc.object();
+        return dbContext;
     }
 }
 
