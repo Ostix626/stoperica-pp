@@ -17,17 +17,13 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QJsonArray>
-#include <filesystem>
-#include <unistd.h>
 #include <QDir>
 #include <QTextStream>
 
 #include <iostream>
 using namespace std;
-using std::filesystem::current_path;
 
 QJsonObject createDbContext() {
-<<<<<<< HEAD
     QString dbContent = R"({
         "vrijemeNeaktivnosti": 5,
         "cijenaSata" : 5,
@@ -63,20 +59,6 @@ QJsonObject createDbContext() {
             stream << dbContent;
             file.close();
         }
-=======
-    QFile file;
-    file.setFileName("./Baza/baza.json"); //TODO: try, ako ne usprije -> napravit mapu Baza i datoteu baza.json na mjestu  QDir::currentPath() + "/Baza/baza.json i u baza.json hitit hardkodiranu praznu bazu
-//    file.setFileName( QDir::currentPath() + "/Baza/baza.json");
-//    file.setFileName("D:\\Projekti\\QT\\Projekt\\timer\\Baza\\baza.json");
-    file.open(QIODevice::ReadOnly | QIODevice::Text);
-    const QByteArray val = file.readAll();
-    file.close();
-    QJsonParseError jsonError;
-    QJsonDocument doc = QJsonDocument::fromJson(val, &jsonError);
-    if( jsonError.error != QJsonParseError::NoError ) {
-        std::cout << "fromJson failed: " << jsonError.errorString().toStdString() << std::endl;
-        return QJsonObject();
->>>>>>> 23e3e0e6dfaf7a4906ddca40aec94bed102435e3
     }else {
         file.open(QIODevice::ReadOnly | QIODevice::Text);
         const QByteArray val = file.readAll();
@@ -112,10 +94,6 @@ QStringList getStrankeNames(QJsonArray stranke) {
 
 int main(int argc, char *argv[])
 {
-<<<<<<< HEAD
-=======
-    qWarning() << QDir::currentPath();
->>>>>>> 23e3e0e6dfaf7a4906ddca40aec94bed102435e3
 
     //baza
     QJsonObject dbContext = createDbContext();
