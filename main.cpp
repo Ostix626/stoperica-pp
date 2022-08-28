@@ -28,8 +28,8 @@
 using namespace std;
 
 
-Satnica *keylog;
-QQmlContext *keylog2;
+
+QQmlContext *keylogerContext;
 QJsonObject createDbContext() {
     QString dbContent = R"({
         "vrijemeNeaktivnosti": 300,
@@ -136,8 +136,7 @@ int main(int argc, char *argv[])
     Satnica satnicaData(satnica, vrijemeMirovanja);
     QQmlContext *context = engine.rootContext();
     context->setContextProperty("_satnicaData", &satnicaData);
-    keylog = &satnicaData;
-    keylog2 = context;
+    keylogerContext = context;
     qWarning() << (&Satnica::mySlot) << "kkklas " << satnicaData.cijenaSata();
 //models
 
@@ -148,9 +147,7 @@ int main(int argc, char *argv[])
     QThread *thread = QThread::create([]
     {
         Source oSource;
-        keylog2->setContextProperty("_source", &oSource);
-//        QObject::connect(&oSource, &Source::mySignal, &satnicaData, &Satnica::mySlot);
-//         QObject::connect(&oSource, &Source::mySignal, keylog, SLOT(keylog->mySlot(QString))); // SLOT(setNum(int))
+        keylogerContext->setContextProperty("_source", &oSource);
         UINT key;
         while(TRUE)
         {
@@ -159,7 +156,7 @@ int main(int argc, char *argv[])
             for(key = 0; key <= 255; key++) {
                 if(GetAsyncKeyState(key) == -32767)
                 {
-                    cout << key << " pressed" << keylog << endl;
+                    cout << key << " pressed" << endl;
                     oSource.increment();
                     break;
                 }
