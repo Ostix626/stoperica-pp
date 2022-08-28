@@ -85,7 +85,7 @@ Window {
             // VRIJEME
             Label{
                 id: label_vrijeme_mirovanja
-                text: "Vrijeme mirovanja (min): "
+                text: "Vrijeme mirovanja (min): " + (_satnicaData.idleTimeSeconds / 60)
                 font.styleName: "Bold"
                 font.pointSize: 16
                 anchors.top: textField_satnica.bottom
@@ -100,8 +100,8 @@ Window {
                 width: 240
                 height: 32
                 anchors.top: label_vrijeme_mirovanja.bottom
-                validator: DoubleValidator {bottom: 0.01; top: 9999.0;}
-                text: ""
+                validator: IntValidator {bottom: 1;}
+                text: "" + _satnicaData.idleTimeSeconds
                 hoverEnabled: false
                 font.pointSize: 14
                 leftPadding: 17
@@ -120,9 +120,14 @@ Window {
                 font.pointSize: 14
                 anchors.leftMargin: 5
                 onClicked: {
-                    label_vrijeme_mirovanja.text = "Vrijeme mirovanja (min): " + textField_vrijeme_mirovanja.text
+                    if(textField_vrijeme_mirovanja.text != "")
+                    {
+                        _satnicaData.idleTimeSeconds = parseInt(textField_vrijeme_mirovanja.text) * 60
+                    }
+                    label_vrijeme_mirovanja.text = "Vrijeme mirovanja (min): " + _satnicaData.idleTimeSeconds / 60
+
                     if (textField_vrijeme_mirovanja.text !== "" ) {
-                        label_broj_preostalog_vremena_mirovanja.preostalo_vrijeme_mirovanja = textField_vrijeme_mirovanja.text * 60
+                        label_broj_preostalog_vremena_mirovanja.preostalo_vrijeme_mirovanja = _satnicaData.idleTimeSeconds
                     }
                     else {
                         label_broj_preostalog_vremena_mirovanja.preostalo_vrijeme_mirovanja = 66
@@ -160,7 +165,7 @@ Window {
         }
         Label{
             id: label_broj_preostalog_vremena_mirovanja
-            property int preostalo_vrijeme_mirovanja: 900
+            property int preostalo_vrijeme_mirovanja: _satnicaData.idleTimeSeconds
             text: parseInt(preostalo_vrijeme_mirovanja / 60) + ":" + preostalo_vrijeme_mirovanja % 60 + " min"
 //            text: "14:22"
             font.styleName: "Bold"

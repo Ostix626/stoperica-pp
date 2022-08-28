@@ -129,7 +129,7 @@ int main(int argc, char *argv[])
     }, Qt::QueuedConnection);
 
     //models
-    Satnica satnicaData(satnica);
+    Satnica satnicaData(satnica, vrijemeMirovanja);
     QQmlContext *context = engine.rootContext();
     context->setContextProperty("_satnicaData", &satnicaData);
     qWarning() << "kkklas " << satnicaData.cijenaSata();

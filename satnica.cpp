@@ -7,7 +7,8 @@
 //    qInfo() << this << "constructor" << name;
 //}
 
-Satnica::Satnica(float cijenaSata) : m_cijenaSata(cijenaSata)
+Satnica::Satnica(float cijenaSata, int idleTimeSeconds)
+    : m_cijenaSata(cijenaSata), m_idleTimeSeconds(idleTimeSeconds)
 {
 }
 
@@ -22,6 +23,19 @@ void Satnica::setCijenaSata(float &cijenaSata)
     if (cijenaSata == m_cijenaSata) return;
     m_cijenaSata = cijenaSata;
     emit cijenaSataChanged(m_cijenaSata);
+}
+
+int Satnica::idleTimeSeconds()
+{
+    return m_idleTimeSeconds;
+}
+
+void Satnica::setIdleTimeSeconds(int &idleTimeSeconds)
+{
+    qDebug() << idleTimeSeconds;
+    if (idleTimeSeconds == m_idleTimeSeconds) return;
+    m_idleTimeSeconds = idleTimeSeconds;
+    emit cijenaSataChanged(m_idleTimeSeconds);
 }
 
 
