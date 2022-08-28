@@ -38,4 +38,10 @@ void Satnica::setIdleTimeSeconds(int &idleTimeSeconds)
     emit cijenaSataChanged(m_idleTimeSeconds);
 }
 
+void Satnica::mySlot(QString message)
+{
+    qInfo() << message;
+}
+
+
 

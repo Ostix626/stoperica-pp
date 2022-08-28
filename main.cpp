@@ -24,11 +24,15 @@
 #include <iostream>
 
 #include "satnica.h"
+#include "source.h"
 using namespace std;
 
+
+Satnica *keylog;
+QQmlContext *keylog2;
 QJsonObject createDbContext() {
     QString dbContent = R"({
-        "vrijemeNeaktivnosti": 5,
+        "vrijemeNeaktivnosti": 300,
         "cijenaSata" : 5,
         "stranke" : [
             {
@@ -128,12 +132,14 @@ int main(int argc, char *argv[])
             QCoreApplication::exit(-1);
     }, Qt::QueuedConnection);
 
-    //models
+//models
     Satnica satnicaData(satnica, vrijemeMirovanja);
     QQmlContext *context = engine.rootContext();
     context->setContextProperty("_satnicaData", &satnicaData);
-    qWarning() << "kkklas " << satnicaData.cijenaSata();
-    //models
+    keylog = &satnicaData;
+    keylog2 = context;
+    qWarning() << (&Satnica::mySlot) << "kkklas " << satnicaData.cijenaSata();
+//models
 
     engine.load(url); // ucitavanje qml-a
 
@@ -141,8 +147,11 @@ int main(int argc, char *argv[])
     //keylogger thread
     QThread *thread = QThread::create([]
     {
+        Source oSource;
+        keylog2->setContextProperty("_source", &oSource);
+//        QObject::connect(&oSource, &Source::mySignal, &satnicaData, &Satnica::mySlot);
+//         QObject::connect(&oSource, &Source::mySignal, keylog, SLOT(keylog->mySlot(QString))); // SLOT(setNum(int))
         UINT key;
-
         while(TRUE)
         {
             Sleep(10);
@@ -150,7 +159,9 @@ int main(int argc, char *argv[])
             for(key = 0; key <= 255; key++) {
                 if(GetAsyncKeyState(key) == -32767)
                 {
-                    cout << key << " pressed" << endl;
+                    cout << key << " pressed" << keylog << endl;
+                    oSource.increment();
+                    break;
                 }
             }
         }

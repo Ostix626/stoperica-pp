@@ -19,6 +19,8 @@ set(PROJECT_SOURCES
         qml.qrc
         satnica.h
         satnica.cpp
+        source.h
+        source.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

@@ -101,7 +101,7 @@ Window {
                 height: 32
                 anchors.top: label_vrijeme_mirovanja.bottom
                 validator: IntValidator {bottom: 1;}
-                text: "" + _satnicaData.idleTimeSeconds
+                text: "" + (_satnicaData.idleTimeSeconds / 60)
                 hoverEnabled: false
                 font.pointSize: 14
                 leftPadding: 17
@@ -263,16 +263,24 @@ Window {
 
     Timer {
         id: timer_odbrojaavnje
+        property int last_reset: 0;
         interval: 1000
         repeat: true
         running: true
         onTriggered: {
+
 //            console.log(label_broj_preostalog_vremena_mirovanja.preostalo_vrijeme_mirovanja)
             if (label_broj_preostalog_vremena_mirovanja.preostalo_vrijeme_mirovanja > 0) {
                 label_broj_preostalog_vremena_mirovanja.preostalo_vrijeme_mirovanja -= 1
             }
             else {
                 //TODO: funkcija oduzet vrijeme na aktivnoj stranci
+            }
+
+            if (last_reset != _source.press)
+            {
+                label_broj_preostalog_vremena_mirovanja.preostalo_vrijeme_mirovanja = _satnicaData.idleTimeSeconds
+                last_reset = _source.press
             }
         }
     }

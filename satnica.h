@@ -18,7 +18,8 @@ public:
     int idleTimeSeconds();
     void setIdleTimeSeconds(int& idleTimeSeconds);
 
-//public slots:
+public slots:
+    void mySlot(QString message);
 //    void changeCijenaSata(float cijena);
 //    void changeIdleTimeSeconds(int cijena);
 
