@@ -6,7 +6,6 @@ import QtQuick.Layouts 1.3
 
 
 
-
 Window {
     id: window
     width: 700
@@ -39,7 +38,7 @@ Window {
                 id: label_satnica
 //                x: 0
 //                y: 0
-                text: "Satnica (EUR): "
+                text: "Satnica (EUR): " + _satnicaData.cijenaSata
                 font.styleName: "Bold"
                 font.pointSize: 16
                 anchors.top: rectangle_satnica.top
@@ -54,7 +53,8 @@ Window {
                 width: 240
                 height: 32
                 anchors.top: label_satnica.bottom
-                text: ""
+                validator: DoubleValidator {bottom: 0.01; top: 9999.0;}
+                text: "" + _satnicaData.cijenaSata.toFixed(2)
                 hoverEnabled: false
                 font.pointSize: 14
                 leftPadding: 17
@@ -73,7 +73,12 @@ Window {
                 font.pointSize: 14
                 anchors.leftMargin: 5
                 onClicked: {
-                    label_satnica.text = "Satnica (EUR): " + textField_satnica.text
+                    if(textField_satnica.text != "")
+                    {
+                        _satnicaData.cijenaSata = parseFloat(textField_satnica.text).toFixed(2)
+                    }
+                    label_satnica.text = "Satnica (EUR): " + _satnicaData.cijenaSata.toFixed(2)
+//                    label_satnica.text = "Satnica (EUR): " + textField_satnica.text
                 }
             }
 
@@ -95,6 +100,7 @@ Window {
                 width: 240
                 height: 32
                 anchors.top: label_vrijeme_mirovanja.bottom
+                validator: DoubleValidator {bottom: 0.01; top: 9999.0;}
                 text: ""
                 hoverEnabled: false
                 font.pointSize: 14
@@ -256,7 +262,7 @@ Window {
         repeat: true
         running: true
         onTriggered: {
-            console.log(label_broj_preostalog_vremena_mirovanja.preostalo_vrijeme_mirovanja)
+//            console.log(label_broj_preostalog_vremena_mirovanja.preostalo_vrijeme_mirovanja)
             if (label_broj_preostalog_vremena_mirovanja.preostalo_vrijeme_mirovanja > 0) {
                 label_broj_preostalog_vremena_mirovanja.preostalo_vrijeme_mirovanja -= 1
             }

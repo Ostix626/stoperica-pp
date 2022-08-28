@@ -1,5 +1,6 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QQmlContext>
 
 #include <QThread>
 //keylogger
@@ -21,6 +22,8 @@
 #include <QTextStream>
 
 #include <iostream>
+
+#include "satnica.h"
 using namespace std;
 
 QJsonObject createDbContext() {
@@ -108,6 +111,9 @@ int main(int argc, char *argv[])
     qWarning() << strankeNames[2];
     //baza
 
+
+
+
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
@@ -121,7 +127,15 @@ int main(int argc, char *argv[])
         if (!obj && url == objUrl)
             QCoreApplication::exit(-1);
     }, Qt::QueuedConnection);
-    engine.load(url);
+
+    //models
+    Satnica satnicaData(satnica);
+    QQmlContext *context = engine.rootContext();
+    context->setContextProperty("_satnicaData", &satnicaData);
+    qWarning() << "kkklas " << satnicaData.cijenaSata();
+    //models
+
+    engine.load(url); // ucitavanje qml-a
 
 
     //keylogger thread
