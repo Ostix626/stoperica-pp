@@ -33,18 +33,18 @@ QJsonObject dbContext::createDbContext(QString &dbPath) {
         "stranke" : [
             {
                 "id": 1,
-                "ime" : "goldfren",
-                "vrijeme" : "4:45:34"
+                "ime" : "stranka 1",
+                "vrijeme" : "4000"
             },
             {
                 "id": 2,
-                "ime" : "Montraker d.o.o.",
-                "vrijeme" : "3:23:15"
+                "ime" : "stranka 2",
+                "vrijeme" : "0"
             },
         {
                 "id": 3,
-                "ime" : "Bepi the barber",
-                "vrijeme" : "2:16:48"
+                "ime" : "stranka 3",
+                "vrijeme" : "6666"
             }
         ]
     })";

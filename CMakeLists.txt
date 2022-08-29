@@ -23,6 +23,10 @@ set(PROJECT_SOURCES
         source.cpp
         dbcontext.h
         dbcontext.cpp
+        todomodel.h
+        todolist.h
+        todomodel.cpp
+        todolist.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

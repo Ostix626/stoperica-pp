@@ -22,6 +22,8 @@
 #include "satnica.h"
 #include "source.h"
 #include "dbcontext.h"
+#include "todolist.h"
+#include "todomodel.h"
 using namespace std;
 
 
@@ -65,13 +67,26 @@ int main(int argc, char *argv[])
             QCoreApplication::exit(-1);
     }, Qt::QueuedConnection);
 
+
+//TODO
+    QQmlContext *context = engine.rootContext();
+
+    qmlRegisterType<ToDoModel>("ToDo", 1, 0, "ToDoModel");
+    qmlRegisterUncreatableType<ToDoList>("ToDo", 1, 0, "ToDoList",
+        QStringLiteral("ToDoList should not be created in QML"));
+
+    ToDoList toDoList;
+    engine.rootContext()->setContextProperty(QStringLiteral("toDoList"), &toDoList);
+
 //models
     Satnica satnicaData(satnica, vrijemeMirovanja);
-    QQmlContext *context = engine.rootContext();
+//    QQmlContext *context = engine.rootContext();
     context->setContextProperty("_satnicaData", &satnicaData);
     keylogerContext = context;
     qWarning() << (&Satnica::mySlot) << "kkklas " << satnicaData.cijenaSata();
 //models
+
+
 
     engine.load(url); // ucitavanje qml-a
 

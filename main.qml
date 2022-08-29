@@ -4,6 +4,8 @@ import QtQuick.Controls 2.5
 import QtQuick.Window 2.3
 import QtQuick.Layouts 1.3
 
+import ToDo 1.0
+
 
 
 Window {
@@ -15,6 +17,16 @@ Window {
     visible: true
     color: "#e9d5a7"
     title: qsTr("Štoperica++")
+    function time(sekunde) {
+        var h = parseInt(sekunde / 3600)
+        var m = parseInt((sekunde - (h * 3600))/ 60)
+        var s = sekunde % 60
+        if (h < 10) h = "0" + h
+        if (m < 10) m = "0" + m
+        if (s < 10) s = "0" + s
+        var formated = h + ":" + m + ":" + s
+        return formated;
+    }
 
     Rectangle {
         id: rectangle_postavke
@@ -189,7 +201,7 @@ Window {
             anchors.rightMargin: 30
             anchors.bottomMargin: 20
             leftPadding: 4
-            text: qsTr("START/STOP")
+            text: qsTr("START")
             font.pointSize: 20
             onClicked: {
                 if (timer_odbrojaavnje.running === true)
@@ -216,37 +228,165 @@ Window {
             margins: 10
         }
 
-        ListModel {
-            id: model_stranke
-            ListElement { ime: "goldfren" ; vrijeme: "4:34:33" }
-            ListElement { ime: "goldfren" ; vrijeme: "4:34:33" }
-            ListElement { ime: "goldfren" ; vrijeme: "4:34:33" }
-            ListElement { ime: "goldfren" ; vrijeme: "4:34:33" }
-            ListElement { ime: "goldfren" ; vrijeme: "4:34:33" }
-            ListElement { ime: "goldfren" ; vrijeme: "4:34:33" }
-            ListElement { ime: "goldfren" ; vrijeme: "4:34:33" }
-            ListElement { ime: "goldfren" ; vrijeme: "4:34:33" }
-        }
+//        ToDoList {
+//            anchors {
+//                fill: parent
+//                margins: 10
+//            }
+//        }
+        ColumnLayout {
+            anchors {
+                fill: parent
+                margins: 10
+            }
+            Frame {
+                Layout.fillWidth: true
+                anchors.fill: parent
 
-        Component {
-            id: component_stranke_delegate
-            Row {
-                Text {
-                    text: model.ime
+
+                RowLayout {
+                    id: rowlayout_buttons
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    height: 50
+                    spacing: 10
+                    anchors.leftMargin: 10
+
+                    Button {
+                        text: qsTr("    Dodaj novu stranku    ")
+                        onClicked: toDoList.appendItem()
+                        Layout.fillWidth: true
+                        font.pointSize: 12
+                    }
+                    Button {
+                        text: qsTr("Izbriši označene stranke")
+                        onClicked: toDoList.removeCompletedItems()
+                        Layout.fillWidth: true
+                        font.pointSize: 12
+                    }
                 }
-                Text {
-                    text: model.vrijeme
+
+                ListView {
+                    anchors.top: rowlayout_buttons.bottom
+                    anchors.bottom: parent.bottom
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.leftMargin: 10
+                    clip: true
+
+                    model: ToDoModel {
+                        list: toDoList
+                    }
+
+                    delegate: RowLayout {
+                        width: parent.width
+                        height: 34
+
+
+
+                        TextField {
+                            text: model.description
+                            onEditingFinished: model.description = text
+                            Layout.fillWidth: true
+                            font.pointSize: 14
+                            leftPadding: 10
+                        }
+                        TextField {
+                            id: textfield_izracunato_vrijeme
+                            visible:false
+                            text: model.time
+                            readOnly : true
+                            onEditingFinished: model.time = text
+//                            Layout.fillWidth: true
+                        }
+                        Label {
+                            id: label_formatirano_vrijeme
+                            text: window.time(model.time)
+                            font.pointSize: 14
+
+                            leftPadding: 50
+                            rightPadding: 50
+
+                        }
+
+                        CheckBox {
+                            id: checkbox_aktivna_stranka
+
+                            checked: model.done
+                            onClicked: model.done = checked
+                        }
+                        Timer {
+                            id: timer_racunanj_vremena_stranke
+                            interval: 1000
+                            repeat: true
+                            running: true
+                            property int oduzmi_vrijeme: 1;
+                            onTriggered: {
+
+//                                console.log(textfield_izracunato_vrijeme.text)
+                                if (checkbox_aktivna_stranka.checked == true
+                                        && timer_odbrojaavnje.running == true
+                                        && label_broj_preostalog_vremena_mirovanja.preostalo_vrijeme_mirovanja > 0)
+                                {
+                                    textfield_izracunato_vrijeme.text = parseInt(textfield_izracunato_vrijeme.text) + 1
+                                    label_formatirano_vrijeme.text = window.time(textfield_izracunato_vrijeme.text)
+                                    oduzmi_vrijeme = 1
+                                }
+                                else if(checkbox_aktivna_stranka.checked == true
+                                        && timer_odbrojaavnje.running == true
+                                        && label_broj_preostalog_vremena_mirovanja.preostalo_vrijeme_mirovanja == 0
+                                        && oduzmi_vrijeme == 1)
+
+                                {
+                                    textfield_izracunato_vrijeme.text = parseInt(textfield_izracunato_vrijeme.text) - _satnicaData.idleTimeSeconds
+                                    label_formatirano_vrijeme.text = window.time(textfield_izracunato_vrijeme.text)
+                                    oduzmi_vrijeme = 0
+                                }
+
+                            }
+                        }
+
+                    }
                 }
             }
+
+
         }
 
-        Column {
-            anchors.fill: parent
-            Repeater {
-                model: model_stranke
-                delegate: component_stranke_delegate
-            }
-        }
+
+//        ListModel {
+//            id: model_stranke
+//            ListElement { ime: "goldfren" ; vrijeme: "4:34:33" }
+//            ListElement { ime: "goldfren" ; vrijeme: "4:34:33" }
+//            ListElement { ime: "goldfren" ; vrijeme: "4:34:33" }
+//            ListElement { ime: "goldfren" ; vrijeme: "4:34:33" }
+//            ListElement { ime: "goldfren" ; vrijeme: "4:34:33" }
+//            ListElement { ime: "goldfren" ; vrijeme: "4:34:33" }
+//            ListElement { ime: "goldfren" ; vrijeme: "4:34:33" }
+//            ListElement { ime: "goldfren" ; vrijeme: "4:34:33" }
+//        }
+
+//        Component {
+//            id: component_stranke_delegate
+//            Row {
+//                Text {
+//                    text: model.ime
+//                }
+//                Text {
+//                    text: model.vrijeme
+//                }
+//            }
+//        }
+
+//        Column {
+//            anchors.fill: parent
+//            Repeater {
+//                model: model_stranke
+//                delegate: component_stranke_delegate
+//            }
+//        }
+
+       ////////////////
 
 //        Keys.onPressed: (event)=> { if (event.key == Qt.Key_Enter) console.log("event.8key"); }
 
@@ -266,16 +406,16 @@ Window {
         property int last_reset: 0;
         interval: 1000
         repeat: true
-        running: true
+        running: false
         onTriggered: {
 
 //            console.log(label_broj_preostalog_vremena_mirovanja.preostalo_vrijeme_mirovanja)
             if (label_broj_preostalog_vremena_mirovanja.preostalo_vrijeme_mirovanja > 0) {
                 label_broj_preostalog_vremena_mirovanja.preostalo_vrijeme_mirovanja -= 1
             }
-            else {
-                //TODO: funkcija oduzet vrijeme na aktivnoj stranci
-            }
+//            else {
+//                //TODO: funkcija oduzet vrijeme na aktivnoj stranci
+//            }
 
             if (last_reset != _source.press)
             {
