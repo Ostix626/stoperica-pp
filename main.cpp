@@ -26,6 +26,9 @@
 #include "todomodel.h"
 using namespace std;
 
+QString DB_PATH = QDir::currentPath() + "/Baza";
+dbContext CTX = dbContext(DB_PATH);
+QJsonObject DB_CONTEXT = CTX.createDbContext(DB_PATH);
 
 
 QQmlContext *keylogerContext;
@@ -34,20 +37,20 @@ int main(int argc, char *argv[])
 {
 
     //baza
-    QString dbPath = QDir::currentPath() + "/Baza";
+    /*QString dbPath = QDir::currentPath() + "/Baza";
     dbContext ctx(dbPath);
-    QJsonObject dbContext = ctx.createDbContext(dbPath);
-    double satnica = dbContext.value(QString("cijenaSata")).toDouble();
-    qWarning() << satnica;
-    double vrijemeMirovanja = dbContext.value(QString("vrijemeNeaktivnosti")).toDouble();
-    qWarning() << vrijemeMirovanja;
-    QJsonArray stranke = ctx.getStrankeArray(dbContext);
-    QStringList strankeNames = ctx.getStrankeNames(stranke);
+    QJsonObject dbContext = ctx.createDbContext(dbPath);*/
+    double satnica = DB_CONTEXT.value(QString("cijenaSata")).toDouble();
+    //qWarning() << satnica;
+    double vrijemeMirovanja = DB_CONTEXT.value(QString("vrijemeNeaktivnosti")).toDouble();
+    //qWarning() << vrijemeMirovanja;
+    QJsonArray stranke = CTX.getStrankeArray(DB_CONTEXT);
+    QStringList strankeNames = CTX.getStrankeNames(stranke);
     QJsonObject vrijeme = stranke[0].toObject();
-    qWarning() << vrijeme.value(QString("vrijeme")).toString();
+    /*qWarning() << vrijeme.value(QString("vrijeme")).toString();
     qWarning() << strankeNames[0];
     qWarning() << strankeNames[1];
-    qWarning() << strankeNames[2];
+    qWarning() << strankeNames[2];*/
     //baza
 
 

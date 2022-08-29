@@ -1,5 +1,9 @@
 #include "satnica.h"
+#include "dbcontext.h"
+#include "source.h"
 #include <QDebug>
+#include <QDir>
+#include <QJsonObject>
 //Laptop::Laptop(QObject *parent, QString name)
 //    : QObject{parent}
 //{
@@ -19,9 +23,9 @@ float Satnica::cijenaSata()
 
 void Satnica::setCijenaSata(float &cijenaSata)
 {
-    qDebug() << cijenaSata;
     if (cijenaSata == m_cijenaSata) return;
     m_cijenaSata = cijenaSata;
+    CTX.updateDB(DB_CONTEXT, "null", m_cijenaSata, 0, QVector<ToDoItem>());
     emit cijenaSataChanged(m_cijenaSata);
 }
 
@@ -32,9 +36,9 @@ int Satnica::idleTimeSeconds()
 
 void Satnica::setIdleTimeSeconds(int &idleTimeSeconds)
 {
-    qDebug() << idleTimeSeconds;
     if (idleTimeSeconds == m_idleTimeSeconds) return;
     m_idleTimeSeconds = idleTimeSeconds;
+    CTX.updateDB(DB_CONTEXT, "null", 0, m_idleTimeSeconds, QVector<ToDoItem>());
     emit cijenaSataChanged(m_idleTimeSeconds);
 }
 

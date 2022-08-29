@@ -3,6 +3,7 @@
 
 #include <QString>
 #include <QObject>
+#include "todolist.h"
 
 class dbContext : public QObject
 {
@@ -14,11 +15,13 @@ public:
     QString dbPath();
     void setDbPath(QString& dbPath);
 
-    QJsonObject createDbContext(QString& dbPath);
+    const QJsonObject createDbContext(QString& dbPath);
 
-    QJsonArray getStrankeArray(QJsonObject& dbContext);
+    QJsonArray getStrankeArray(const QJsonObject& dbContext);
 
     QStringList getStrankeNames(QJsonArray& stranke);
+
+    void updateDB(QJsonObject& dbContext, QString date, double satnica, double vrijemeMirovanja, QVector<ToDoItem> mItems);
 
 public slots:
     void mySlot(QString message);

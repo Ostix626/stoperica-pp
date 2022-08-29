@@ -2,6 +2,11 @@
 #define SOURCE_H
 
 #include <QObject>
+#include "dbcontext.h"
+
+extern QString DB_PATH;
+extern dbContext CTX;
+extern QJsonObject DB_CONTEXT;
 
 class Source : public QObject
 {

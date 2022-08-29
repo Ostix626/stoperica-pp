@@ -13,10 +13,10 @@ ToDoList::ToDoList(QObject *parent) : QObject(parent)
     QJsonArray stranke = ctx.getStrankeArray(dbContext);
     QStringList strankeNames = ctx.getStrankeNames(stranke);
     QJsonObject vrijeme = stranke[0].toObject();
-    qWarning() << vrijeme.value(QString("vrijeme")).toString();
+    /*qWarning() << vrijeme.value(QString("vrijeme")).toString();
     qWarning() << strankeNames[0];
     qWarning() << strankeNames[1];
-    qWarning() << strankeNames[2];
+    qWarning() << strankeNames[2];*/
 
     for(int i = 0; i < stranke.size(); ++i) {
         QJsonObject stranka = stranke[i].toObject();
