@@ -3,6 +3,7 @@ import QtQuick.Window 2.15
 import QtQuick.Controls 2.5
 import QtQuick.Window 2.3
 import QtQuick.Layouts 1.3
+import QtQuick.Controls.Material
 
 import ToDo 1.0
 
@@ -15,7 +16,9 @@ Window {
     minimumHeight: 600
     minimumWidth: 650
     visible: true
-    color: "#e9d5a7"
+//    color: "#e9d5a7"
+//    color: "#dee6fc"
+
     title: qsTr("Štoperica++")
     function time(sekunde) {
         var h = parseInt(sekunde / 3600)
@@ -54,7 +57,7 @@ Window {
                 font.styleName: "Bold"
                 font.pointSize: 16
                 anchors.top: rectangle_satnica.top
-                bottomPadding: 10
+//                bottomPadding: 10
                 topPadding: 10
                 anchors.left: rectangle_satnica.left
                 anchors.leftMargin: 10
@@ -63,7 +66,7 @@ Window {
             TextField {
                 id: textField_satnica
                 width: 240
-                height: 32
+//                height: 32
                 anchors.top: label_satnica.bottom
                 validator: DoubleValidator {bottom: 0.01; top: 9999.0;}
                 text: "" + _satnicaData.cijenaSata.toFixed(2)
@@ -76,14 +79,15 @@ Window {
 
             Button {
                 id: button_save_satnica
-                width: 50
-                height: 32
+//                width: 50
+//                height: 32
                 anchors.left: textField_satnica.right
                 anchors.top: label_satnica.bottom
                 leftPadding: 4
                 text: qsTr("Save")
                 font.pointSize: 14
                 anchors.leftMargin: 5
+                Material.background: "#9cf5ff"
                 onClicked: {
                     if(textField_satnica.text != "")
                     {
@@ -101,8 +105,8 @@ Window {
                 font.styleName: "Bold"
                 font.pointSize: 16
                 anchors.top: textField_satnica.bottom
-                bottomPadding: 10
-                topPadding: 10
+//                bottomPadding: 10
+                topPadding: 4
                 anchors.left: rectangle_satnica.left
                 anchors.leftMargin: 10
             }
@@ -110,7 +114,7 @@ Window {
             TextField {
                 id: textField_vrijeme_mirovanja
                 width: 240
-                height: 32
+//                height: 32
                 anchors.top: label_vrijeme_mirovanja.bottom
                 validator: IntValidator {bottom: 1;}
                 text: "" + (_satnicaData.idleTimeSeconds / 60)
@@ -123,14 +127,15 @@ Window {
 
             Button {
                 id: button_save_vrijeme_mirovanja
-                width: 50
-                height: 32
+//                width: 50
+//                height: 32
                 anchors.left: textField_vrijeme_mirovanja.right
                 anchors.top: label_vrijeme_mirovanja.bottom
                 leftPadding: 4
                 text: qsTr("Save")
                 font.pointSize: 14
                 anchors.leftMargin: 5
+                Material.background: "#9cf5ff"
                 onClicked: {
                     if(textField_vrijeme_mirovanja.text != "")
                     {
@@ -202,6 +207,7 @@ Window {
             anchors.bottomMargin: 20
             leftPadding: 4
             text: qsTr("START")
+            Material.background: button_start_stop.text == qsTr("START")? "#86f9b9" : "#fe6778"
             font.pointSize: 20
             onClicked: {
                 if (timer_odbrojaavnje.running === true)
@@ -221,7 +227,8 @@ Window {
 
     Rectangle {
         id: rectangle_stranke
-        color: "#eff3ff"
+//        color: "#eff3ff"
+//        color: "#d2e7e8"
         anchors {
             fill: parent
             topMargin: rectangle_postavke.height + 20
@@ -251,18 +258,21 @@ Window {
                     height: 50
                     spacing: 10
                     anchors.leftMargin: 10
+                    anchors.rightMargin: 10
 
                     Button {
                         text: qsTr("    Dodaj novu stranku    ")
                         onClicked: toDoList.appendItem()
                         Layout.fillWidth: true
                         font.pointSize: 12
+                        Material.background: "#86f9b9"
                     }
                     Button {
                         text: qsTr("Izbriši označene stranke")
                         onClicked: toDoList.removeCompletedItems()
                         Layout.fillWidth: true
                         font.pointSize: 12
+                        Material.background: "#fe6778"
                     }
                 }
 
@@ -280,7 +290,7 @@ Window {
 
                     delegate: RowLayout {
                         width: parent.width
-                        height: 34
+//                        height: 34
 
 
 
@@ -290,6 +300,7 @@ Window {
                             Layout.fillWidth: true
                             font.pointSize: 14
                             leftPadding: 10
+                            color: checkbox_aktivna_stranka.checked ? "#e91e63" : ""
                         }
                         TextField {
                             id: textfield_izracunato_vrijeme
@@ -303,6 +314,7 @@ Window {
                             id: label_formatirano_vrijeme
                             text: window.time(model.time)
                             font.pointSize: 14
+                            color: checkbox_aktivna_stranka.checked ? "#e91e63" : ""
 
                             leftPadding: 50
                             rightPadding: 50
