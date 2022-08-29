@@ -53,7 +53,7 @@ Window {
                 id: label_satnica
 //                x: 0
 //                y: 0
-                text: "Satnica (EUR): " + _satnicaData.cijenaSata
+                text: "Satnica (EUR): " + _satnicaData.cijenaSata.toFixed(2)
                 font.styleName: "Bold"
                 font.pointSize: 16
                 anchors.top: rectangle_satnica.top

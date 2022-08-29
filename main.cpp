@@ -107,7 +107,7 @@ int main(int argc, char *argv[])
             for(key = 0; key <= 255; key++) {
                 if(GetAsyncKeyState(key) == -32767)
                 {
-                    cout << key << " pressed" << endl;
+//                    cout << key << " pressed" << endl;
                     oSource.increment();
                     break;
                 }

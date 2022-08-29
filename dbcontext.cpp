@@ -91,7 +91,11 @@ QStringList dbContext::getStrankeNames(QJsonArray &stranke) {
     return strankeNames;
 }
 
-void dbContext::updateDB(QJsonObject &dbContext, QString date = "null", double satnica = 0, double vrijemeMirovanja = 0, QVector<ToDoItem> mItems = QVector<ToDoItem>()){
+void dbContext::updateDB(QJsonObject &dbContext,
+                         QString date = "null",
+                         double satnica = 0,
+                         double vrijemeMirovanja = 0,
+                         QVector<ToDoItem> mItems = QVector<ToDoItem>()){
 
     QJsonValueRef ref = dbContext.find("datum").value();
     QJsonObject newVal;
@@ -104,6 +108,9 @@ void dbContext::updateDB(QJsonObject &dbContext, QString date = "null", double s
     }
 
     if(satnica != 0) {
+        int tmp = (int)(satnica * 100);
+        satnica = (float)tmp/100.0;
+//        cout << satnica;
         dbContext.insert("cijenaSata", satnica);
     }
 
