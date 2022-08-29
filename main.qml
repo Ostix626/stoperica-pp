@@ -3,7 +3,7 @@ import QtQuick.Window 2.15
 import QtQuick.Controls 2.5
 import QtQuick.Window 2.3
 import QtQuick.Layouts 1.3
-import QtQuick.Controls.Material
+import QtQuick.Controls.Material 2.3
 
 import ToDo 1.0
 
@@ -45,7 +45,7 @@ Window {
 
         Rectangle {
             id: rectangle_satnica
-            width: 300
+            width: 320
             height: rectangle_postavke.height
             color: "#00ffffff"
 
@@ -86,7 +86,7 @@ Window {
                 leftPadding: 4
                 text: qsTr("Save")
                 font.pointSize: 14
-                anchors.leftMargin: 5
+                anchors.leftMargin: 20
                 Material.background: "#9cf5ff"
                 onClicked: {
                     if(textField_satnica.text != "")
@@ -134,7 +134,7 @@ Window {
                 leftPadding: 4
                 text: qsTr("Save")
                 font.pointSize: 14
-                anchors.leftMargin: 5
+                anchors.leftMargin: 20
                 Material.background: "#9cf5ff"
                 onClicked: {
                     if(textField_vrijeme_mirovanja.text != "")
@@ -250,6 +250,16 @@ Window {
                 Layout.fillWidth: true
                 anchors.fill: parent
 
+                Dialog {
+                    anchors.centerIn: parent
+                    id: confirm_dialog
+                    width: 400
+                    height: 100
+                    title: "Želite li sigurno izbrisati označene stranke?"
+                    standardButtons: Dialog.No | Dialog.Yes
+                    onAccepted: toDoList.removeCompletedItems()
+                }
+
 
                 RowLayout {
                     id: rowlayout_buttons
@@ -269,11 +279,13 @@ Window {
                     }
                     Button {
                         text: qsTr("Izbriši označene stranke")
-                        onClicked: toDoList.removeCompletedItems()
+//                        onClicked: toDoList.removeCompletedItems()
+                        onClicked: confirm_dialog.open()
                         Layout.fillWidth: true
                         font.pointSize: 12
                         Material.background: "#fe6778"
                     }
+
                 }
 
                 ListView {
