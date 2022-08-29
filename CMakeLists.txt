@@ -21,6 +21,8 @@ set(PROJECT_SOURCES
         satnica.cpp
         source.h
         source.cpp
+        dbcontext.h
+        dbcontext.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
