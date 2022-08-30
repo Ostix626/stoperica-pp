@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QVector>
+#include <QTimer>
 
 //Q_MOC_INCLUDE("dbcontext.h");
 //class dbContext;
@@ -34,9 +35,11 @@ signals:
 public slots:
     void appendItem();
     void removeCompletedItems();
+    void startTimer();
 
 private:
     QVector<ToDoItem> mItems;
+    QTimer m_timer;
 };
 
 #endif // TODOLIST_H

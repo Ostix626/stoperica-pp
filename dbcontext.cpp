@@ -5,7 +5,9 @@
 #include <QDir>
 #include <QJsonDocument>
 #include <QJsonArray>
+#include <QTimer>
 #include "todolist.h"
+#include "source.h"
 
 #include <iostream>
 
@@ -28,31 +30,31 @@ void dbContext::setDbPath(QString &dbPath) {
 }
 
 const QJsonObject dbContext::createDbContext(QString &dbPath) {
-    QString dbContent = R"({
-        "datum" : "null",
-        "vrijemeNeaktivnosti": 300,
-        "cijenaSata" : 5,
-        "stranke" : [
-            {
-                "ime" : "stranka 1",
-                "vrijeme" : "4000"
-            },
-            {
-                "ime" : "stranka 2",
-                "vrijeme" : "0"
-            },
-        {
-                "ime" : "stranka 3",
-                "vrijeme" : "6666"
-            }
-        ]
-    })";
     QDir dbDir = QDir();
     dbDir.mkpath(dbPath);
     dbPath += "/baza.json";
     QFile file(dbPath);
 
     if(!file.exists()) {
+        QString dbContent = R"({
+            "datum" : "null",
+            "vrijemeNeaktivnosti": 300,
+            "cijenaSata" : 5,
+            "stranke" : [
+                {
+                    "ime" : "stranka 1",
+                    "vrijeme" : 4000
+                },
+                {
+                    "ime" : "stranka 2",
+                    "vrijeme" : 0
+                },
+                {
+                    "ime" : "stranka 3",
+                    "vrijeme" : 6666
+                }
+            ]
+        })";
         if(file.open(QIODevice::ReadWrite | QIODevice::Text)) {
             QTextStream stream(&file);
             stream << dbContent;
@@ -91,18 +93,23 @@ QStringList dbContext::getStrankeNames(QJsonArray &stranke) {
     return strankeNames;
 }
 
+void dbContext::mySlot(QString message)
+{
+    qInfo() << message;
+}
+
 void dbContext::updateDB(QJsonObject &dbContext,
                          QString date = "null",
                          double satnica = 0,
                          double vrijemeMirovanja = 0,
                          QVector<ToDoItem> mItems = QVector<ToDoItem>()){
 
-    QJsonValueRef ref = dbContext.find("datum").value();
+    QJsonValue ref = dbContext.value(QString("stranke"));
     QJsonObject newVal;
+    //QJsonArray arr = ref.toArray();
     QJsonArray stranke;
-    QJsonObject baza;
     QJsonDocument doc;
-    QFile file(m_dbPath + "/baza.json");
+    QFile file(DB_PATH);
     if(date != "null") {
         dbContext.insert("datum", date);
     }
@@ -119,23 +126,29 @@ void dbContext::updateDB(QJsonObject &dbContext,
     }
 
     if(!mItems.empty()) {
-        qWarning() << "stranke not empty";
         for(int i = 0; i < mItems.length(); ++i) {
             QJsonObject obj;
+            //QJsonObject stranka = arr[i].toObject();
             obj.insert("ime", mItems[i].description);
             obj.insert("vrijeme", mItems[i].time);
             stranke.insert(stranke.size(), obj);
+//            qWarning() << mItems.length();
+//            qWarning() << mItems[i].description;
+//            qWarning() << mItems[i].time;
         }
         dbContext.insert("stranke", stranke);
     }
+
+//    qWarning() << date << " " << satnica << " " << vrijemeMirovanja;
+//    for(int i = 0; i < mItems.length(); ++i) {
+//        qWarning() << mItems[i].description;
+//        qWarning() << mItems[i].time;
+//    }
 
     doc.setObject(dbContext);
     file.open(QFile::WriteOnly | QFile::Text | QFile::Truncate);
     file.write(doc.toJson());
     file.close();
-}
 
-void dbContext::mySlot(QString message)
-{
-    qInfo() << message;
+    //qWarning() << "DB updated";
 }

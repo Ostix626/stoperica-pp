@@ -318,8 +318,8 @@ Window {
                             id: textfield_izracunato_vrijeme
                             visible:false
                             text: model.time
-                            readOnly : true
-                            onEditingFinished: model.time = text
+//                            readOnly : true
+//                            onEditingFinished: model.time = text
 //                            Layout.fillWidth: true
                         }
                         Label {
@@ -366,6 +366,7 @@ Window {
                                     label_formatirano_vrijeme.text = window.time(textfield_izracunato_vrijeme.text)
                                     oduzmi_vrijeme = 0
                                 }
+                                model.time = textfield_izracunato_vrijeme.text
 
                             }
                         }
