@@ -316,8 +316,8 @@ Window {
                             id: textfield_izracunato_vrijeme
                             visible:false
                             text: model.time
-                            readOnly : true
-                            onEditingFinished: model.time = text
+//                            readOnly : true
+//                            onEditingFinished: model.time = text
 //                            Layout.fillWidth: true
                         }
                         Label {
@@ -344,7 +344,6 @@ Window {
                             running: true
                             property int oduzmi_vrijeme: 1;
                             onTriggered: {
-
 //                                console.log(textfield_izracunato_vrijeme.text)
                                 if (checkbox_aktivna_stranka.checked == true
                                         && timer_odbrojaavnje.running == true
@@ -364,7 +363,7 @@ Window {
                                     label_formatirano_vrijeme.text = window.time(textfield_izracunato_vrijeme.text)
                                     oduzmi_vrijeme = 0
                                 }
-
+                                model.time = textfield_izracunato_vrijeme.text
                             }
                         }
 

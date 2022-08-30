@@ -23,7 +23,7 @@ ToDoList::ToDoList(QObject *parent) : QObject(parent)
         strankeNames<<stranka.value(QString("ime")).toString();
         mItems.append({ false, stranka.value(QString("ime")).toString(), stranka.value(QString("vrijeme")).toString().toInt()});
     }
-    qWarning() << mItems.data()->description;
+//    qWarning() << mItems.data()->time;
 }
 
 QVector<ToDoItem> ToDoList::items() const

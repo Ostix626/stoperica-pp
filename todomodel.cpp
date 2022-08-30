@@ -24,6 +24,7 @@ QVariant ToDoModel::data(const QModelIndex &index, int role) const
         return QVariant();
 
     const ToDoItem item = mList->items().at(index.row());
+//    qWarning() << item.time;
     switch (role) {
     case DoneRole:
         return QVariant(item.done);

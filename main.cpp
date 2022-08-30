@@ -34,7 +34,52 @@ QJsonObject DB_CONTEXT = CTX.createDbContext(DB_PATH);
 //QQmlContext *keylogerContext;
 QQmlContext *context;
 
-void baseExport() {
+QString calculateContents() {
+    QString output = "";
+
+
+    return output;
+}
+
+void baseExport(QString mjesecIzvjestaja) {
+    QString exportPath = QDir::currentPath() + "/Mjesecni_izvjestaji";
+    qDebug() << exportPath;
+//    QString path("SomePath/NewDirectoryA/");
+    QDir dir; // Initialize to the desired dir if 'path' is relative
+              // By default the program's working directory "." is used.
+
+    // We create the directory if needed
+    if (!dir.exists(exportPath))
+        dir.mkpath(exportPath); // You can check the success if needed
+
+    QFile exportDataFile(exportPath + "/" + mjesecIzvjestaja + ".txt");
+    //    QFile file(dbPath);
+
+    if(!exportDataFile.exists()) {
+        if(exportDataFile.open(QIODevice::ReadWrite | QIODevice::Text)) {
+            QTextStream stream(&exportDataFile);
+//            stream << "dbContent";
+            stream << calculateContents();
+            exportDataFile.close();
+        }
+    }
+//    QFile file(path + "NewFile.kml");
+//    file.open(QIODevice::WriteOnly); // Or QIODevice::ReadWrite
+
+
+
+//    QDir dbDir = QDir();
+//    dbDir.mkpath(dbPath);
+//    dbPath += "/baza.json";
+//    QFile file(dbPath);
+
+//    if(!file.exists()) {
+//        if(file.open(QIODevice::ReadWrite | QIODevice::Text)) {
+//            QTextStream stream(&file);
+//            stream << dbContent;
+//            file.close();
+//        }
+//    }
 
 }
 
@@ -42,13 +87,16 @@ void baseExportCheck() {
     QString baseDate = DB_CONTEXT.value(QString("datum")).toString();
     time_t t = time(NULL);
     tm* tPtr = localtime(&t);
-    QString currentDate = QString::number((tPtr->tm_mon)+1);
+//    QString currentDate = QString::number((tPtr->tm_mon)+1);
+    QString currentYear = QString::number((tPtr->tm_year)+1900);
+    QString currentDate = "3";
     if (baseDate == "null"){
         CTX.updateDB(DB_CONTEXT, currentDate, 0, 0, QVector<ToDoItem>());
     }
     else if (baseDate != currentDate)
     {
         //TODO export baze
+        baseExport(baseDate + "-" + currentYear);
         CTX.updateDB(DB_CONTEXT, currentDate, 0, 0, QVector<ToDoItem>());
     }
 }
