@@ -16,10 +16,8 @@ Window {
     minimumHeight: 600
     minimumWidth: 650
     visible: true
-//    color: "#e9d5a7"
-//    color: "#dee6fc"
-
     title: qsTr("Štoperica++")
+
     function time(sekunde) {
         var h = parseInt(sekunde / 3600)
         var m = parseInt((sekunde - (h * 3600))/ 60)

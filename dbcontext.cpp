@@ -28,7 +28,13 @@ void dbContext::setDbPath(QString &dbPath) {
 }
 
 const QJsonObject dbContext::createDbContext(QString &dbPath) {
-    QString dbContent = R"({
+
+//    QString dateJsonString = "\"\{\"datum\" : \"" + QDate::currentDate().month();
+//    dateJsonString.setNum(QDate::currentDate().month()); QDate::currentDate().month()
+//    {
+//            "datum" ; "null
+    QString dbContent = R"(
+    {
         "datum" : "null",
         "vrijemeNeaktivnosti": 300,
         "cijenaSata" : 5,
@@ -71,6 +77,7 @@ const QJsonObject dbContext::createDbContext(QString &dbPath) {
         return QJsonObject();
     }else {
         QJsonObject dbContext = doc.object();
+//        dbContext.insert("datum", QDate::currentDate().month());
         return dbContext;
     }
 }

@@ -31,10 +31,32 @@ dbContext CTX = dbContext(DB_PATH);
 QJsonObject DB_CONTEXT = CTX.createDbContext(DB_PATH);
 
 
-QQmlContext *keylogerContext;
+//QQmlContext *keylogerContext;
+QQmlContext *context;
+
+void baseExport() {
+
+}
+
+void baseExportCheck() {
+    QString baseDate = DB_CONTEXT.value(QString("datum")).toString();
+    time_t t = time(NULL);
+    tm* tPtr = localtime(&t);
+    QString currentDate = QString::number((tPtr->tm_mon)+1);
+    if (baseDate == "null"){
+        CTX.updateDB(DB_CONTEXT, currentDate, 0, 0, QVector<ToDoItem>());
+    }
+    else if (baseDate != currentDate)
+    {
+        //TODO export baze
+        CTX.updateDB(DB_CONTEXT, currentDate, 0, 0, QVector<ToDoItem>());
+    }
+}
 
 int main(int argc, char *argv[])
 {
+
+    qDebug() << QDate::currentDate().month();
 
     //baza
     /*QString dbPath = QDir::currentPath() + "/Baza";
@@ -51,6 +73,20 @@ int main(int argc, char *argv[])
     qWarning() << strankeNames[0];
     qWarning() << strankeNames[1];
     qWarning() << strankeNames[2];*/
+    baseExportCheck();
+//    QString baseDate = DB_CONTEXT.value(QString("datum")).toString();
+//    time_t t = time(NULL);
+//    tm* tPtr = localtime(&t);
+//    QString currentDate = QString::number((tPtr->tm_mon)+1);
+////    QString currentDate = "9";
+//    if (baseDate == "null"){
+//        CTX.updateDB(DB_CONTEXT, currentDate, 0, 0, QVector<ToDoItem>());
+//    }
+//    else if (baseDate != currentDate)
+//    {
+//        //TODO export baze
+//        CTX.updateDB(DB_CONTEXT, currentDate, 0, 0, QVector<ToDoItem>());
+//    }
     //baza
 
 
@@ -72,7 +108,8 @@ int main(int argc, char *argv[])
 
 
 //TODO
-    QQmlContext *context = engine.rootContext();
+//    QQmlContext *context = engine.rootContext();
+    context = engine.rootContext();
 
     qmlRegisterType<ToDoModel>("ToDo", 1, 0, "ToDoModel");
     qmlRegisterUncreatableType<ToDoList>("ToDo", 1, 0, "ToDoList",
@@ -85,7 +122,7 @@ int main(int argc, char *argv[])
     Satnica satnicaData(satnica, vrijemeMirovanja);
 //    QQmlContext *context = engine.rootContext();
     context->setContextProperty("_satnicaData", &satnicaData);
-    keylogerContext = context;
+//    keylogerContext = context;
     qWarning() << (&Satnica::mySlot) << "kkklas " << satnicaData.cijenaSata();
 //models
 
@@ -98,7 +135,8 @@ int main(int argc, char *argv[])
     QThread *thread = QThread::create([]
     {
         Source oSource;
-        keylogerContext->setContextProperty("_source", &oSource);
+//        keylogerContext->setContextProperty("_source", &oSource);
+        context->setContextProperty("_source", &oSource);
         UINT key;
         while(TRUE)
         {
