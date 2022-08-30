@@ -16,6 +16,8 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QDir>
+#include <QTimer>
+#include <QObject>
 
 #include <iostream>
 
@@ -137,12 +139,10 @@ int main(int argc, char *argv[])
 //    }
     //baza
 
-
-
-
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
+
 
     QGuiApplication app(argc, argv);
 
@@ -170,14 +170,18 @@ int main(int argc, char *argv[])
     Satnica satnicaData(satnica, vrijemeMirovanja);
 //    QQmlContext *context = engine.rootContext();
     context->setContextProperty("_satnicaData", &satnicaData);
-//    keylogerContext = context;
-    qWarning() << (&Satnica::mySlot) << "kkklas " << satnicaData.cijenaSata();
-//models
-
 
 
     engine.load(url); // ucitavanje qml-a
 
+    /*QVector<ToDoItem> mItems = toDoList.items();
+    for(int i = 0; i < toDoList.items().length(); ++i) {
+        qWarning() << toDoList.items()[i].description;
+        qWarning() << toDoList.items()[i].time;
+    }*/
+    //CTX.callUpdateDB(&toDoList.items());
+
+    toDoList.startTimer();
 
     //keylogger thread
     QThread *thread = QThread::create([]
