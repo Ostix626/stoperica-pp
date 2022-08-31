@@ -117,7 +117,7 @@ void dbContext::updateDB(QJsonObject &dbContext,
     }
 
     if(satnica != 0) {
-        int tmp = (int)(satnica * 100);
+        int tmp = (int)((satnica * 100) + 0.5);
         satnica = (float)tmp/100.0;
 //        cout << satnica;
         dbContext.insert("cijenaSata", satnica);
@@ -152,5 +152,5 @@ void dbContext::updateDB(QJsonObject &dbContext,
     file.write(doc.toJson());
     file.close();
 
-    //qWarning() << "DB updated";
+    qWarning() << "DB updated";
 }

@@ -36,9 +36,46 @@ QJsonObject DB_CONTEXT = CTX.createDbContext(DB_PATH);
 //QQmlContext *keylogerContext;
 QQmlContext *context;
 
-QString calculateContents() {
-    QString output = "";
+QString conv(int x)
+{
+    QString out = "0";
+    if (x < 10){
+         out = "0" + QString::number(x);
+    }
+    else out = QString::number(x);
+    return out;
+}
 
+QString secondsToTime(long sekunde) {
+    int h = sekunde / 3600;
+    int m = (sekunde - (h * 3600))/ 60;
+    int s = sekunde % 60;
+
+    return (conv(h) + ":" + conv(m) + ":" + conv(s) + " h");
+}
+
+QString calculateEarning(long sekunde, float satnica){
+    float rez = sekunde * (satnica / 3600);
+    return QString::number(rez, 'f', 2) + " €";
+}
+
+QString calculateContents() {
+//    .toString().toFloat()
+    float satnica = DB_CONTEXT.value(QString("cijenaSata")).toDouble();
+//    qDebug() << "satnica: " << QString::number(satnica);
+    QString output = "Cijena radnog sata: " + QString::number(satnica) + " €\n";
+    QJsonArray stranke = CTX.getStrankeArray(DB_CONTEXT);
+//    float cijenaSata = satnica.toFloat();
+    long ukVrijeme = 0;
+//    qDebug() << "cijena sata: " << cijenaSata;
+    for(int i = 0; i < stranke.size(); i++){
+        QJsonObject stranka = stranke[i].toObject();
+        QString imeStranke = stranka.value(QString("ime")).toString();
+        int vrijeme = stranka.value(QString("vrijeme")).toInt();
+        ukVrijeme += vrijeme;
+        output += "\n" + imeStranke + " ; " + secondsToTime(vrijeme) + " ; " + calculateEarning(vrijeme, satnica);
+    }
+    output += "\n\nUkupno vrijeme rada: " + secondsToTime(ukVrijeme) + "\nUkupna mjesecna zarada: " + calculateEarning(ukVrijeme, satnica);
 
     return output;
 }
@@ -65,23 +102,6 @@ void baseExport(QString mjesecIzvjestaja) {
             exportDataFile.close();
         }
     }
-//    QFile file(path + "NewFile.kml");
-//    file.open(QIODevice::WriteOnly); // Or QIODevice::ReadWrite
-
-
-
-//    QDir dbDir = QDir();
-//    dbDir.mkpath(dbPath);
-//    dbPath += "/baza.json";
-//    QFile file(dbPath);
-
-//    if(!file.exists()) {
-//        if(file.open(QIODevice::ReadWrite | QIODevice::Text)) {
-//            QTextStream stream(&file);
-//            stream << dbContent;
-//            file.close();
-//        }
-//    }
 
 }
 
@@ -89,9 +109,9 @@ void baseExportCheck() {
     QString baseDate = DB_CONTEXT.value(QString("datum")).toString();
     time_t t = time(NULL);
     tm* tPtr = localtime(&t);
-//    QString currentDate = QString::number((tPtr->tm_mon)+1);
+    QString currentDate = QString::number((tPtr->tm_mon)+1);
     QString currentYear = QString::number((tPtr->tm_year)+1900);
-    QString currentDate = "3";
+//    QString currentDate = "5";
     if (baseDate == "null"){
         CTX.updateDB(DB_CONTEXT, currentDate, 0, 0, QVector<ToDoItem>());
     }
@@ -107,6 +127,7 @@ int main(int argc, char *argv[])
 {
 
     qDebug() << QDate::currentDate().month();
+    qDebug() << "vrijednost ure" << DB_CONTEXT.value(QString("cijenaSata"));
 
     //baza
     /*QString dbPath = QDir::currentPath() + "/Baza";
@@ -117,7 +138,7 @@ int main(int argc, char *argv[])
     double vrijemeMirovanja = DB_CONTEXT.value(QString("vrijemeNeaktivnosti")).toDouble();
     //qWarning() << vrijemeMirovanja;
     QJsonArray stranke = CTX.getStrankeArray(DB_CONTEXT);
-    QStringList strankeNames = CTX.getStrankeNames(stranke);
+//    QStringList strankeNames = CTX.getStrankeNames(stranke);
     QJsonObject vrijeme = stranke[0].toObject();
     /*qWarning() << vrijeme.value(QString("vrijeme")).toString();
     qWarning() << strankeNames[0];
@@ -154,7 +175,7 @@ int main(int argc, char *argv[])
             QCoreApplication::exit(-1);
     }, Qt::QueuedConnection);
 
-
+//qDebug() << QString::number(3.23);
 //TODO
 //    QQmlContext *context = engine.rootContext();
     context = engine.rootContext();

@@ -307,6 +307,7 @@ Window {
                         TextField {
                             text: model.description
                             onEditingFinished: model.description = text
+                            onAccepted: model.description = text
                             Layout.fillWidth: true
                             font.pointSize: 14
                             leftPadding: 10
