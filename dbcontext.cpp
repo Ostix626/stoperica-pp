@@ -40,7 +40,7 @@ const QJsonObject dbContext::createDbContext(QString &dbPath) {
         QString dbContent = R"({
             "datum" : "null",
             "vrijemeNeaktivnosti": 300,
-            "cijenaSata" : 5,
+            "cijenaSata" : 5.50,
             "stranke" : [
                 {
                     "ime" : "stranka 1",
@@ -152,5 +152,5 @@ void dbContext::updateDB(QJsonObject &dbContext,
     file.write(doc.toJson());
     file.close();
 
-    qWarning() << "DB updated";
+//    qWarning() << "DB updated";
 }
