@@ -5,8 +5,6 @@
 #include <QVector>
 #include <QTimer>
 
-//Q_MOC_INCLUDE("dbcontext.h");
-//class dbContext;
 
 struct ToDoItem
 {

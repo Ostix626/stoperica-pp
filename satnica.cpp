@@ -4,12 +4,7 @@
 #include <QDebug>
 #include <QDir>
 #include <QJsonObject>
-//Laptop::Laptop(QObject *parent, QString name)
-//    : QObject{parent}
-//{
-//    this -> name = name;
-//    qInfo() << this << "constructor" << name;
-//}
+
 
 Satnica::Satnica(float cijenaSata, int idleTimeSeconds)
     : m_cijenaSata(cijenaSata), m_idleTimeSeconds(idleTimeSeconds)

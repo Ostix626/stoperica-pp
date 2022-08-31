@@ -20,8 +20,6 @@ public:
 
 public slots:
     void mySlot(QString message);
-//    void changeCijenaSata(float cijena);
-//    void changeIdleTimeSeconds(int cijena);
 
 signals:
     void cijenaSataChanged(float cijena);

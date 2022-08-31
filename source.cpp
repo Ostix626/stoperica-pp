@@ -24,9 +24,3 @@ void Source::increment()
 }
 
 
-
-//void Source::test()
-//{
-//    qDebug() << "QString message key is pressed";
-//    emit mySignal("key is pressed");
-//}

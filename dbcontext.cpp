@@ -74,7 +74,6 @@ const QJsonObject dbContext::createDbContext(QString &dbPath) {
         return QJsonObject();
     }else {
         QJsonObject dbContext = doc.object();
-//        dbContext.insert("datum", QDate::currentDate().month());
         return dbContext;
     }
 }
@@ -108,7 +107,6 @@ void dbContext::updateDB(QJsonObject &dbContext,
 
     QJsonValue ref = dbContext.value(QString("stranke"));
     QJsonObject newVal;
-    //QJsonArray arr = ref.toArray();
     QJsonArray stranke;
     QJsonDocument doc;
     QFile file(DB_PATH);
@@ -119,7 +117,6 @@ void dbContext::updateDB(QJsonObject &dbContext,
     if(satnica != 0) {
         int tmp = (int)((satnica * 100) + 0.5);
         satnica = (float)tmp/100.0;
-//        cout << satnica;
         dbContext.insert("cijenaSata", satnica);
     }
 
@@ -130,22 +127,12 @@ void dbContext::updateDB(QJsonObject &dbContext,
     if(!mItems.empty()) {
         for(int i = 0; i < mItems.length(); ++i) {
             QJsonObject obj;
-            //QJsonObject stranka = arr[i].toObject();
             obj.insert("ime", mItems[i].description);
             obj.insert("vrijeme", mItems[i].time);
             stranke.insert(stranke.size(), obj);
-//            qWarning() << mItems.length();
-//            qWarning() << mItems[i].description;
-//            qWarning() << mItems[i].time;
         }
         dbContext.insert("stranke", stranke);
     }
-
-//    qWarning() << date << " " << satnica << " " << vrijemeMirovanja;
-//    for(int i = 0; i < mItems.length(); ++i) {
-//        qWarning() << mItems[i].description;
-//        qWarning() << mItems[i].time;
-//    }
 
     doc.setObject(dbContext);
     file.open(QFile::WriteOnly | QFile::Text | QFile::Truncate);

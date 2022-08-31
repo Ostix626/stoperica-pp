@@ -49,12 +49,9 @@ QString calculateContents() {
 
     // zapis u export
     float satnica = DB_CONTEXT.value(QString("cijenaSata")).toDouble();
-//    qDebug() << "satnica: " << QString::number(satnica);
     QString output = "Cijena radnog sata: " + QString::number(satnica) + " €\n";
     QJsonArray stranke = CTX.getStrankeArray(DB_CONTEXT);
-//    float cijenaSata = satnica.toFloat();
     long ukVrijeme = 0;
-//    qDebug() << "cijena sata: " << cijenaSata;
 
     for(int i = 0; i < stranke.size(); i++){
         // zapis u export
@@ -85,21 +82,16 @@ QString calculateContents() {
 void baseExport(QString mjesecIzvjestaja) {
     QString exportPath = QDir::currentPath() + "/Mjesecni_izvjestaji";
     qDebug() << exportPath;
-//    QString path("SomePath/NewDirectoryA/");
-    QDir dir; // Initialize to the desired dir if 'path' is relative
-              // By default the program's working directory "." is used.
+    QDir dir;
 
-    // We create the directory if needed
     if (!dir.exists(exportPath))
-        dir.mkpath(exportPath); // You can check the success if needed
-
+        dir.mkpath(exportPath);
     QFile exportDataFile(exportPath + "/" + mjesecIzvjestaja + ".txt");
-    //    QFile file(dbPath);
+
 
     if(!exportDataFile.exists()) {
         if(exportDataFile.open(QIODevice::ReadWrite | QIODevice::Text)) {
             QTextStream stream(&exportDataFile);
-//            stream << "dbContent";
             stream << calculateContents();
             exportDataFile.close();
         }
@@ -107,28 +99,6 @@ void baseExport(QString mjesecIzvjestaja) {
 
 }
 
-//void resetDB () {
-//    QJsonArray stranke = CTX.getStrankeArray(DB_CONTEXT);
-//    QJsonArray resetStranke;
-//    QJsonDocument doc;
-//    QFile file(DB_PATH);
-//    QJsonObject obj;
-//    //QJsonObject stranka = arr[i].toObject();
-//    for(int i = 0; i < stranke.size(); i++){
-//        QJsonObject stranka = stranke[i].toObject();
-//        QString imeStranke = stranka.value(QString("ime")).toString();
-//        obj.insert("ime", imeStranke);
-//        obj.insert("vrijeme", 0);
-//        resetStranke.insert(resetStranke.size(), obj);
-//    }
-
-//    DB_CONTEXT.insert("stranke", resetStranke);
-
-//    doc.setObject(DB_CONTEXT);
-//    file.open(QFile::WriteOnly | QFile::Text | QFile::Truncate);
-//    file.write(doc.toJson());
-//    file.close();
-//}
 
 void baseExportCheck() {
     QString baseDate = DB_CONTEXT.value(QString("datum")).toString();
@@ -136,15 +106,13 @@ void baseExportCheck() {
     tm* tPtr = localtime(&t);
     QString currentDate = QString::number((tPtr->tm_mon)+1);
     QString currentYear = QString::number((tPtr->tm_year)+1900);
-//  currentDate = "8";
+//  currentDate = "8"; // za testiranje mjesecnog exporta staviti drugi broj
     if (baseDate == "null"){
         CTX.updateDB(DB_CONTEXT, currentDate, 0, 0, QVector<ToDoItem>());
     }
     else if (baseDate != currentDate)
     {
-        //TODO export baze
         baseExport(baseDate + "-" + currentYear);
         CTX.updateDB(DB_CONTEXT, currentDate, 0, 0, QVector<ToDoItem>());
-//        resetDB();
     }
 }

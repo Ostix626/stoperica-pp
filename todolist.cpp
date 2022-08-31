@@ -8,21 +8,13 @@
 
 ToDoList::ToDoList(QObject *parent) : QObject(parent)
 {
-//    QString dbPath = QDir::currentPath() + "/Baza";
-//    dbContext ctx(dbPath);
-//    QJsonObject dbContext = ctx.createDbContext(dbPath);
     QJsonArray stranke = CTX.getStrankeArray(DB_CONTEXT);
     QStringList strankeNames = CTX.getStrankeNames(stranke);
     QJsonObject vrijeme = stranke[0].toObject();
-    /*qWarning() << vrijeme.value(QString("vrijeme")).toString();
-    qWarning() << strankeNames[0];
-    qWarning() << strankeNames[1];
-    qWarning() << strankeNames[2];*/
 
     for(int i = 0; i < stranke.size(); ++i) {
         QJsonObject stranka = stranke[i].toObject();
         strankeNames<<stranka.value(QString("ime")).toString();
-        //qWarning() << stranka.value(QString("vrijeme")).toString().toInt();
         mItems.append({ false, stranka.value(QString("ime")).toString(), stranka.value(QString("vrijeme")).toInt()});
     }
 
@@ -43,7 +35,6 @@ bool ToDoList::setItemAt(int index, const ToDoItem &item)
         return false;
 
     mItems[index] = item;
-    //qWarning() << mItems[index].time;
     return true;
 }
 
